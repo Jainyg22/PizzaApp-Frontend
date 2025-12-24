@@ -175,7 +175,7 @@ function Login() {
                         </button>
                         
                         <p className="mt-3 text-xs text-gray-500">Donot have an account ? 
-                         <Link to="/auth/signup" className="text-yellow-500">Sign Up</Link>
+                         <Link to="/auth/signup" className="text-yellow-500">Sign In</Link>
                         </p>
                     </form>
                 </div>
