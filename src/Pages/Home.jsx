@@ -204,7 +204,7 @@ function Home() {
                                                     {item.description}
                                                 </p>
                                                 <p className="text-lg font-medium text-gray-900 title-font">
-                                                    ${item.price}
+                                                    ₹{item.price}
                                                 </p>
                                             </div>
                                         </div>

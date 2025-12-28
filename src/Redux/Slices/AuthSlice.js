@@ -2,6 +2,22 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../Helpers/axiosInstance";
 import toast from "react-hot-toast";
 
+let parsedData = {};
+
+try {
+    const storedData = localStorage.getItem('data');
+    parsedData = storedData && storedData !== "undefined"? JSON.parse(storedData): {};
+} catch (err) {
+    parsedData = {};
+}
+
+const initialState = {
+    isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
+    role: localStorage.getItem('role') || '',
+    data: parsedData,
+};
+
+/*
 const storedData = localStorage.getItem('data');
 
 const initialState = {
@@ -11,6 +27,7 @@ const initialState = {
     data: storedData ? JSON.parse(storedData) : {},
     // data: JSON.parse(localStorage.getItem('data')) || {},
 };
+*/
 
 export const createAccount = createAsyncThunk('/auth/createAccount', async (data) => {
     console.log("incoming data to the thunk", data);
@@ -89,7 +106,12 @@ const AuthSlice = createSlice({
             // reducer which will execute when the logout thunk is fulfilled
             localStorage.setItem('isLoggedIn', false);
             localStorage.setItem('role', '');
-            localStorage.setItem('data', JSON.stringify({}));
+
+            // localStorage.setItem('data', JSON.stringify({}));
+            localStorage.removeItem('data');
+            localStorage.removeItem('role');
+            localStorage.setItem('isLoggedIn', 'false');
+
             state.isLoggedIn = false;
             state.role = '';
             state.data = {};
