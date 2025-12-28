@@ -31,7 +31,8 @@ function Order() {
             return;
         }
 
-        const response = await dispatch(placeOrder());
+        const response = await dispatch(placeOrder(details));
+        // const response = await dispatch(placeOrder());
 
         console.log("order response", response);
         

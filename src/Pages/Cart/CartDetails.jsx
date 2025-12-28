@@ -36,7 +36,7 @@ function CartDetails() {
         <section className="py-8 antialiased md:py-16 ">
         <div className="max-w-7xl px-4 mx-auto 2xl:px-0">
           <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
-            Card details
+            Cart details
           </h2>
           {cartDetails?.items?.length > 0 ? (
             <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8 ">

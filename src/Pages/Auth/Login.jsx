@@ -36,11 +36,24 @@ function Login() {
             return;
         }
 
-        const apiReponse = await dispatch(login(loginData));
-        console.log("Api response", apiReponse);
-        if(apiReponse.payload.data.success) {
+        // const apiReponse = await dispatch(login(loginData));
+        // console.log("Api response", apiReponse);
+        // if(apiReponse.payload.data.success) {
+        //     navigate('/');
+        // }
+        const apiResponse = await dispatch(login(loginData));
+
+        // login failed (401, 400, etc.)
+        if (!apiResponse?.payload) {
+            // error toast already shown by thunk
+            return;
+        }
+
+        // login success
+        if (apiResponse.payload.data.success) {
             navigate('/');
         }
+
     }
                         
      return (

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 const initialState = {
     ordersData: null
 }
-
+/*
 export const placeOrder = createAsyncThunk('/order/placeOrder', async () => {
     try {
         const response = axiosInstance.post(`/orders`);
@@ -20,7 +20,18 @@ export const placeOrder = createAsyncThunk('/order/placeOrder', async () => {
         console.log(error);
         toast.error('Something went wrong');
     }
-});
+});*/
+export const placeOrder = createAsyncThunk(
+    '/order/placeOrder',
+    async (orderData, { rejectWithValue }) => {
+        try {
+        const response = await axiosInstance.post('/orders', orderData);
+        return response;
+        } catch (error) {
+        return rejectWithValue(error.response?.data);
+        }
+    }
+);
 
 
 const OrderSlice = createSlice({
