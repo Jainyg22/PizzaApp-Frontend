@@ -1,148 +1,149 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../../Layouts/Layout";
-import Food from '../../assets/Images/food.svg';
+import Food from "../../assets/Images/food.svg";
+import axiosInstance from "../../Helpers/axiosInstance";
+import toast from "react-hot-toast";
+
 function AddProduct() {
-    return (
-        <Layout>
-           <section className="py-12">
-            <div className="flex items-center justify-center px-5">
-                <div className="md:w-2/6">
-                    <img src={Food} />
-                </div>
-                <div className="max-w-md md:w-4/6 mx-auto mt-8 bg-white p-4">
-                    <h2 className="mb-4 text-2xl font-semibold">
-                        Add product
-                    </h2>
+  const navigate = useNavigate();
 
-                <form>
-                        {/* product name */}
-                        <div className="mb-4">
-                            <label 
-                                htmlFor="productName" 
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Product name <span className="text-red-500">*</span>
-                            </label>
-                            <input 
-                                type="text" 
-                                required
-                                minLength={5}
-                                maxLength={20}
-                                name="productName" 
-                                id="productName" 
-                                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                                
-                            />
-                        </div>
+  // 🔹 STATE (logic added)
+  const [productData, setProductData] = useState({
+    productName: "",
+    description: "",
+    price: "",
+    quantity: "",
+    category: "veg",
+    productImage: null,
+  });
 
-                    {/* description */}
-                        <div className="mb-4">
-                            <label 
-                                htmlFor="description" 
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Description
-                            </label>
-                            <input 
-                                type="text" 
-                                required
-                                minLength={5}
-                                maxLength={60}
-                                name="description" 
-                                id="description" 
-                                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                                
-                            />
-                        </div>
+  // 🔹 HANDLE CHANGE (logic added)
+  function handleChange(e) {
+    const { name, value, files } = e.target;
 
-                    {/* Price */}
-                        <div className="mb-4">
-                            <label 
-                                htmlFor="price" 
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Product price <span className="text-red-500">*</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                required
-                                name="price" 
-                                id="price" 
-                                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                                
-                            />
-                        </div>
+    if (name === "productImage") {
+      setProductData({ ...productData, productImage: files[0] });
+    } else {
+      setProductData({ ...productData, [name]: value });
+    }
+  }
 
-                        {/* quantity */}
-                        <div className="mb-4">
-                            <label 
-                                htmlFor="quantity" 
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Product quantity <span className="text-red-500">*</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                required
-                                name="quantity" 
-                                id="quantity" 
-                                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                                
-                            />
-                        </div>
+  // 🔹 HANDLE SUBMIT (logic added)
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-                        {/* category */}
-                        <div className="mb-2">
-                            <label 
-                                htmlFor="category" 
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Select Category <span className="text-red-500">*</span>
-                            </label>
-                            <select 
-                                name="category" 
-                                id="category" 
-                                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            >
-                                <option value="veg">Vegetarian</option>
-                                <option value="non-veg">Non-Vegetarian</option>
-                                <option value="drinks">Soft drinks</option>
-                                <option value="sides">Sides</option>
-                            </select>
-                        </div>
+    try {
+      const formData = new FormData();
+      formData.append("productName", productData.productName);
+      formData.append("description", productData.description);
+      formData.append("price", productData.price);
+      formData.append("quantity", productData.quantity);
+      formData.append("category", productData.category);
+      formData.append("productImage", productData.productImage);
 
+      await axiosInstance.post("/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-                        {/* image */}
-                        <div className="mb-4">
-                            <label 
-                                htmlFor="productImage" 
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Product image <span className="text-red-600">(.jpg, .png, .jpeg )</span>
-                            </label>
-                            <input 
-                                type="file" 
-                                required
-                                name="productImage" 
-                                id="productImage" 
-                                accept=".jpg, .jpeg, .png"
-                                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                                
-                            /> 
-                        </div>
+      toast.success("Product added successfully");
+      navigate("/");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to add product"
+      );
+    }
+  }
 
-                        <button
-                            type="submit"
-                            className="w-full bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-300 ease-in-out"
-                        >
-                            Add product
-                        </button>
-                    </form>
-                </div>
-            </div>
-            
-           </section>
-        </Layout>
-    )
+  return (
+    <Layout>
+      <section className="py-12">
+        <div className="flex flex-col md:flex-row items-center justify-center px-5">
+          
+          {/* LEFT IMAGE */}
+          <div className="md:w-2/6 mb-6 md:mb-0">
+            <img src={Food} alt="Add product" />
+          </div>
+
+          {/* RIGHT FORM (LOGIC ADDED) */}
+          <div className="max-w-md md:w-4/6 mx-auto bg-white p-6 rounded shadow">
+            <h2 className="mb-4 text-2xl font-semibold text-center">
+              Add Product
+            </h2>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              
+              <input
+                type="text"
+                name="productName"
+                placeholder="Product name"
+                className="w-full border p-2 rounded"
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="text"
+                name="description"
+                placeholder="Description"
+                className="w-full border p-2 rounded"
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="number"
+                name="price"
+                placeholder="Price"
+                className="w-full border p-2 rounded"
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="number"
+                name="quantity"
+                placeholder="Quantity"
+                className="w-full border p-2 rounded"
+                onChange={handleChange}
+                required
+              />
+
+              <select
+                name="category"
+                value={productData.category}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              >
+                <option value="veg">Vegetarian</option>
+                <option value="non-veg">Non-Vegetarian</option>
+                <option value="drinks">Drinks</option>
+                <option value="sides">Sides</option>
+              </select>
+
+              <input
+                type="file"
+                name="productImage"
+                accept=".jpg,.jpeg,.png"
+                className="w-full"
+                onChange={handleChange}
+                required
+              />
+
+              <button
+                type="submit"
+                className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600"
+              >
+                Add Product
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </Layout>
+  );
 }
 
 export default AddProduct;

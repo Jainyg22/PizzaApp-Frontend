@@ -10,7 +10,8 @@ import { getCartDetails } from '../Redux/Slices/CartSlice';
 // eslint-disable-next-line react/prop-types
 function Layout({ children }) {
 
-    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const { isLoggedIn, role } = useSelector((state) => state.auth);
+    // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     const { cartsData } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -71,6 +72,7 @@ function Layout({ children }) {
                 </div>
 
                 <div>
+                    
                     <ul className='flex gap-4'>
                         <li className='hover:text-[#FF9110]'>
                             {isLoggedIn ? (
@@ -79,6 +81,13 @@ function Layout({ children }) {
                                 <Link to={'/auth/login'}>Login</Link>
                             )}
                         </li>
+
+                        {isLoggedIn && role === "ADMIN" && (
+                            <li className="hover:text-[#FF9110]">
+                                <Link to="/admin/addProduct">Add Product</Link>
+                            </li>
+                        )}
+
 
                         {isLoggedIn && (
                             <Link to={'/cart'}>

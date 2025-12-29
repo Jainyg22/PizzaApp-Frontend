@@ -98,7 +98,7 @@ const AuthSlice = createSlice({
             // state.role = action?.payload?.data?.data?.userRole,
             // state.data = action?.payload?.data?.data?.userData
 
-            localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('role', action?.payload?.data?.data?.userRole);
             localStorage.setItem('data', JSON.stringify(action?.payload?.data?.data?.userData));
         })
