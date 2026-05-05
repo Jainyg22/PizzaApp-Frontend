@@ -24,12 +24,10 @@ function App() {
 
 
           <Route element={<RequireAuth />}>
-          <Route path='/order' element={<Order />} />
-
-          <Route path='/order/success' element={<OrderSuccess />} />
-          <Route path='/cart' element={<CartDetails />} />
-
-        </Route>
+            <Route path='/order' element={<Order />} />
+            <Route path='/order/success' element={<OrderSuccess />} />
+            <Route path='/cart' element={<CartDetails />} />
+          </Route>
         
 
 
